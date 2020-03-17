@@ -30,6 +30,15 @@ import org.bitcoin.NativeSecp256k1Util;
 import org.bitcoin.Secp256k1Context;
 import org.bitcoinj.wallet.Protos;
 import org.bitcoinj.wallet.Wallet;
+import org.bouncycastle.crypto.signers.ECDSASigner;
+import org.bouncycastle.crypto.signers.HMacDSAKCalculator;
+import org.bouncycastle.math.ec.ECAlgorithms;
+import org.bouncycastle.math.ec.ECPoint;
+import org.bouncycastle.math.ec.FixedPointCombMultiplier;
+import org.bouncycastle.math.ec.FixedPointUtil;
+import org.bouncycastle.math.ec.custom.sec.SecP256K1Curve;
+import org.bouncycastle.util.Properties;
+import org.bouncycastle.util.encoders.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.bouncycastle.asn1.*;
@@ -40,15 +49,7 @@ import org.bouncycastle.crypto.digests.SHA256Digest;
 import org.bouncycastle.crypto.ec.CustomNamedCurves;
 import org.bouncycastle.crypto.generators.ECKeyPairGenerator;
 import org.bouncycastle.crypto.params.*;
-import org.bouncycastle.crypto.signers.ECDSASigner;
-import org.bouncycastle.crypto.signers.HMacDSAKCalculator;
-import org.bouncycastle.math.ec.ECAlgorithms;
-import org.bouncycastle.math.ec.ECPoint;
-import org.bouncycastle.math.ec.FixedPointCombMultiplier;
-import org.bouncycastle.math.ec.FixedPointUtil;
-import org.bouncycastle.math.ec.custom.sec.SecP256K1Curve;
-import org.bouncycastle.util.Properties;
-import org.bouncycastle.util.encoders.Base64;
+
 
 import javax.annotation.Nullable;
 import java.io.ByteArrayOutputStream;
@@ -106,7 +107,7 @@ public class ECKey implements EncryptableItem {
         }
     };
 
-    /** Compares pub key bytes using {@link com.google.common.primitives.UnsignedBytes#lexicographicalComparator()} */
+    /** Compares pub key bytes using {@link UnsignedBytes#lexicographicalComparator()} */
     public static final Comparator<ECKey> PUBKEY_COMPARATOR = new Comparator<ECKey>() {
         private Comparator<byte[]> comparator = UnsignedBytes.lexicographicalComparator();
 
@@ -407,7 +408,7 @@ public class ECKey implements EncryptableItem {
     /**
      * Output this ECKey as an ASN.1 encoded private key, as understood by OpenSSL or used by Bitcoin Core
      * in its wallet storage format.
-     * @throws org.bitcoinj.core.ECKey.MissingPrivateKeyException if the private key is missing or encrypted.
+     * @throws MissingPrivateKeyException if the private key is missing or encrypted.
      */
     public byte[] toASN1() {
         try {
@@ -480,7 +481,6 @@ public class ECKey implements EncryptableItem {
      * Gets the private key in the form of an integer field element. The public key is derived by performing EC
      * point addition this number of times (i.e. point multiplying).
      *
-     * @throws java.lang.IllegalStateException if the private key bytes are not available.
      */
     public BigInteger getPrivKey() {
         if (priv == null)
@@ -614,7 +614,7 @@ public class ECKey implements EncryptableItem {
 
     /**
      * Signs the given hash and returns the R and S components as BigIntegers. In the Bitcoin protocol, they are
-     * usually encoded using ASN.1 format, so you want {@link ECKey.ECDSASignature#toASN1()}
+     * usually encoded using ASN.1 format, so you want {@link ECDSASignature#toASN1()}
      * instead. However sometimes the independent components can be useful, for instance, if you're going to do
      * further EC maths on them.
      * @throws KeyCrypterException if this ECKey doesn't have a private part.
@@ -633,13 +633,13 @@ public class ECKey implements EncryptableItem {
 
     /**
      * Signs the given hash and returns the R and S components as BigIntegers. In the Bitcoin protocol, they are
-     * usually encoded using DER format, so you want {@link ECKey.ECDSASignature#encodeToDER()}
+     * usually encoded using DER format, so you want {@link ECDSASignature#encodeToDER()}
      * instead. However sometimes the independent components can be useful, for instance, if you're doing to do further
      * EC maths on them.
      *
      * @param aesKey The AES key to use for decryption of the private key. If null then no decryption is required.
      * @throws KeyCrypterException if there's something wrong with aesKey.
-     * @throws ECKey.MissingPrivateKeyException if this key cannot sign because it's pubkey only.
+     * @throws MissingPrivateKeyException if this key cannot sign because it's pubkey only.
      */
     public ECDSASignature sign(Sha256Hash input, @Nullable KeyParameter aesKey) throws KeyCrypterException {
         KeyCrypter crypter = getKeyCrypter();
@@ -682,7 +682,7 @@ public class ECKey implements EncryptableItem {
 
     /**
      * <p>Verifies the given ECDSA signature against the message bytes using the public key bytes.</p>
-     * 
+     *
      * <p>When using native ECDSA verification, data must be 32 bytes, and no element may be
      * larger than 520 bytes.</p>
      *
@@ -758,7 +758,7 @@ public class ECKey implements EncryptableItem {
      * Verifies the given ASN.1 encoded ECDSA signature against a hash using the public key, and throws an exception
      * if the signature doesn't match
      * @throws SignatureDecodeException if the signature is unparseable in some way.
-     * @throws java.security.SignatureException if the signature does not match.
+     * @throws SignatureException if the signature does not match.
      */
     public void verifyOrThrow(byte[] hash, byte[] signature) throws SignatureDecodeException, SignatureException {
         if (!verify(hash, signature))
@@ -768,7 +768,7 @@ public class ECKey implements EncryptableItem {
     /**
      * Verifies the given R/S pair (signature) against a hash using the public key, and throws an exception
      * if the signature doesn't match
-     * @throws java.security.SignatureException if the signature does not match.
+     * @throws SignatureException if the signature does not match.
      */
     public void verifyOrThrow(Sha256Hash sigHash, ECDSASignature signature) throws SignatureException {
         if (!ECKey.verify(sigHash.getBytes(), signature, getPubKey()))
@@ -854,7 +854,6 @@ public class ECKey implements EncryptableItem {
      * Signs a text message using the standard Bitcoin messaging signing format and returns the signature as a base64
      * encoded string.
      *
-     * @throws IllegalStateException if this ECKey does not have the private part.
      * @throws KeyCrypterException if this ECKey is encrypted and no AESKey is provided or it does not decrypt the ECKey.
      */
     public String signMessage(String message) throws KeyCrypterException {
@@ -865,7 +864,6 @@ public class ECKey implements EncryptableItem {
      * Signs a text message using the standard Bitcoin messaging signing format and returns the signature as a base64
      * encoded string.
      *
-     * @throws IllegalStateException if this ECKey does not have the private part.
      * @throws KeyCrypterException if this ECKey is encrypted and no AESKey is provided or it does not decrypt the ECKey.
      */
     public String signMessage(String message, @Nullable KeyParameter aesKey) throws KeyCrypterException {
@@ -928,7 +926,7 @@ public class ECKey implements EncryptableItem {
     }
 
     /**
-     * Convenience wrapper around {@link ECKey#signedMessageToKey(String, String)}. If the key derived from the
+     *
      * signature is not the same as this one, throws a SignatureException.
      */
     public void verifyMessage(String message, String signatureBase64) throws SignatureException {
@@ -941,7 +939,6 @@ public class ECKey implements EncryptableItem {
      * Returns the recovery ID, a byte with value between 0 and 3, inclusive, that specifies which of 4 possible
      * curve points was used to sign a message. This value is also referred to as "v".
      *
-     * @throws RuntimeException if no recovery ID can be found.
      */
     public byte findRecoveryId(Sha256Hash hash, ECDSASignature sig) {
         byte recId = -1;
@@ -1037,7 +1034,7 @@ public class ECKey implements EncryptableItem {
 
     /**
      * Returns a 32 byte array containing the private key.
-     * @throws org.bitcoinj.core.ECKey.MissingPrivateKeyException if the private key bytes are missing/encrypted.
+     * @throws MissingPrivateKeyException if the private key bytes are missing/encrypted.
      */
     public byte[] getPrivKeyBytes() {
         return Utils.bigIntegerToBytes(getPrivKey(), 32);
@@ -1049,7 +1046,6 @@ public class ECKey implements EncryptableItem {
      *
      * @param params The network this key is intended for use on.
      * @return Private key bytes as a {@link DumpedPrivateKey}.
-     * @throws IllegalStateException if the private key is not available.
      */
     public DumpedPrivateKey getPrivateKeyEncoded(NetworkParameters params) {
         return new DumpedPrivateKey(params, getPrivKeyBytes(), isCompressed());

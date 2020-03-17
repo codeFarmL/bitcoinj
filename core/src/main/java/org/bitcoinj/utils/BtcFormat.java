@@ -98,8 +98,8 @@ import java.util.regex.Pattern;
  * <p>Automatic denomination means that the formatter adjusts the denominational units in which a
  * formatted number is expressed based on the monetary value that number represents.  An
  * auto-denominating formatter is defined by its style, specified by one of the enumerated
- * values of {@link BtcAutoFormat.Style}.  There are two styles constants: {@link
- * BtcAutoFormat.Style#CODE} (the default), and {@link BtcAutoFormat.Style#SYMBOL}.  The
+ * values of {@link Style}.  There are two styles constants: {@link
+ * Style#CODE} (the default), and {@link Style#SYMBOL}.  The
  * difference is that the {@code CODE} style uses an internationally-distinct currency
  * code, such as {@code "BTC"}, to indicate the units of denomination, while the
  * {@code SYMBOL} style uses a possibly-ambiguous currency symbol such as
@@ -128,7 +128,7 @@ import java.util.regex.Pattern;
  *
  * <ol>
  *   <li>Use one of the factory methods; or
- *   <li>Use a {@link BtcFormat.Builder} object.</ol>
+ *   <li>Use a {@link Builder} object.</ol>
  *
  * <p>The factory methods are appropriate for basic use where the default
  * configuration is either used or modified.  The {@link Builder}
@@ -175,8 +175,8 @@ import java.util.regex.Pattern;
  *
  * <p>Alternatively, if the type of the first argument to
  * {@code getInstance()} is one of the enumerated values of the
- * {@link BtcAutoFormat.Style} type, either {@link BtcAutoFormat.Style#CODE} or
- * {@link BtcAutoFormat.Style#SYMBOL}, then you will get a {@link BtcAutoFormat}
+ * {@link Style} type, either {@link Style#CODE} or
+ * {@link Style#SYMBOL}, then you will get a {@link BtcAutoFormat}
  * instance that uses either a currency code or symbol, respectively,
  * to indicate the results of its auto-denomination.</p>
  *
@@ -235,7 +235,7 @@ import java.util.regex.Pattern;
  *
  * <h3>The {@link Builder} Class</h3>
  *
- * <p>A new {@link BtcFormat.Builder} instance is returned by the {@link #builder()} method.  Such
+ * <p>A new {@link Builder} instance is returned by the {@link #builder()} method.  Such
  * an object has methods that set the configuration parameters of a {@link BtcFormat}
  * object.  Its {@link Builder#build()} method constructs and returns a {@link BtcFormat} instance
  * configured according to those settings.</p>
@@ -262,7 +262,7 @@ import java.util.regex.Pattern;
  * String out = f.format(COIN); <strong>// "XBT 1.00"</strong>
  * </pre></blockquote>
  *
- * <p>See the documentation of the {@link BtcFormat.Builder} class for details.</p>
+ * <p>See the documentation of the {@link Builder} class for details.</p>
  *
  * <h2>Formatting</h2>
  *
@@ -408,7 +408,7 @@ import java.util.regex.Pattern;
  * interpret every number as being denominated in the units that were specified when
  * constructing the instance doing the parsing.  This default behavior of {@link
  * BtcFixedFormat} can be overridden by setting a parsing pattern that includes a currency sign
- * using the {@link BtcFormat.Builder#pattern()} method.</p>
+ * using the {@link Builder#pattern()} method.</p>
  *
  * <p>The {@link BtcAutoFormat#parse(String)} method of {@link BtcAutoFormat} (and of
  * {@link BtcAutoFormat} configured with applicable non-default pattern) will recognize a
@@ -417,7 +417,7 @@ import java.util.regex.Pattern;
  * specified by {@code µ฿}, {@code u฿}, {@code µB⃦}, {@code µɃ},
  * {@code µBTC} or other appropriate permutations of those characters.  Additionally, if
  * either or both of a custom currency code or symbol is configured using {@link
- * BtcFormat.Builder#code} or {@link BtcFormat.Builder#code}, then such code or symbol will
+ * Builder#code} or {@link Builder#code}, then such code or symbol will
  * be recognized in addition to those recognized by default.</p>
  *
  * <p>Instances of this class that recognize currency signs will recognize both currency
@@ -562,7 +562,7 @@ public abstract class BtcFormat extends Format {
         private Locale locale = defaultLocale();
         private int minimumFractionDigits = 2;
         private int[] fractionGroups = {};
-        private Style style = BtcAutoFormat.Style.CODE;
+        private Style style = Style.CODE;
         private int scale = 0;
         private String symbol = "",code = "",pattern = "",localizedPattern = "";
 
@@ -578,7 +578,7 @@ public abstract class BtcFormat extends Format {
          *
          * @throws IllegalArgumentException if {@link #scale(int)} has
          *         previously been invoked on this instance.*/
-        public Builder style(BtcAutoFormat.Style val) {
+        public Builder style(Style val) {
             if (variant == Variant.FIXED)
                 throw new IllegalStateException("You cannot invoke both style() and scale()");
             variant = Variant.AUTO;
@@ -604,7 +604,7 @@ public abstract class BtcFormat extends Format {
          * {@code int}-type constants for the three common values, {@link BtcFormat#COIN_SCALE},
          * {@link BtcFormat#MILLICOIN_SCALE} {@link BtcFormat#MICROCOIN_SCALE}.
          *
-         * <p>If neither this method nor {@link #style(BtcAutoFormat.Style)} is invoked on a
+         * <p>If neither this method nor {@link #style(Style)} is invoked on a
          * {@link Builder}, then the {@link BtcFormat} will default to a
          * fixed-denomination of bitcoins, equivalent to invoking this method with an argument
          * of {@code 0}. */
@@ -667,7 +667,7 @@ public abstract class BtcFormat extends Format {
          *  formatted values.
          *
          *  <p>Note that while the pattern format specified by the {@link
-         *  java.text.DecimalFormat} class includes a mechanism for setting the number of
+         *  DecimalFormat} class includes a mechanism for setting the number of
          *  fractional decimal places, that part of the pattern is ignored.  Instead, use the
          *  {@link #fractionDigits(int)}, {@link #minimumFractionDigits(int)} and {@link
          *  #fractionGroups(int...)} methods.
@@ -692,7 +692,7 @@ public abstract class BtcFormat extends Format {
          *
          *  <p>The pattern is localized according to the locale of the {@code BtcFormat}
          *  instance, the symbols for which can be examined by inspecting the {@link
-         *  java.text.DecimalFormatSymbols} object returned by {@link BtcFormat#symbols()}.
+         *  DecimalFormatSymbols} object returned by {@link BtcFormat#symbols()}.
          *  So, for example, if you are in Germany, then the non-localized pattern of
          *  <pre>"#,##0.###"</pre> would be localized as <pre>"#.##0,###"</pre>
          *
@@ -701,7 +701,7 @@ public abstract class BtcFormat extends Format {
          *  formatted values.
          *
          *  <p>Note that while the pattern format specified by the {@link
-         *  java.text.DecimalFormat} class includes a mechanism for setting the number of
+         *  DecimalFormat} class includes a mechanism for setting the number of
          *  fractional decimal places, that part of the pattern is ignored.  Instead, use the
          *  {@link #fractionDigits(int)}, {@link #minimumFractionDigits(int)} and {@link
          *  #fractionGroups(int...)} methods.
@@ -1344,7 +1344,7 @@ public abstract class BtcFormat extends Format {
     }
 
     /** Set both the currency symbol and international code of the underlying {@link
-      * java.text.NumberFormat} object to the value of the given {@link String}.
+      * NumberFormat} object to the value of the given {@link String}.
       * This method is invoked in the process of parsing, not formatting.
       *
       * Only invoke this from code synchronized on the value of the first argument, and don't
@@ -1355,7 +1355,7 @@ public abstract class BtcFormat extends Format {
     }
 
     /** Set the currency symbol and international code of the underlying {@link
-      * java.text.NumberFormat} object to the values of the last two arguments, respectively.
+      * NumberFormat} object to the values of the last two arguments, respectively.
       * This method is invoked in the process of parsing, not formatting.
       *
       * Only invoke this from code synchronized on value of the first argument, and don't
@@ -1407,7 +1407,7 @@ public abstract class BtcFormat extends Format {
      * keep track of the current parse position.
      *
      * @return a Coin object representing the parsed value
-     * @see java.text.ParsePosition
+     * @see ParsePosition
      */
     public Coin parse(String source, ParsePosition pos) {
         DecimalFormatSymbols anteSigns = null;
@@ -1585,7 +1585,7 @@ public abstract class BtcFormat extends Format {
     }
 
     /** Return a hash code value for this instance.
-     *  @see java.lang.Object#hashCode
+     *  @see Object#hashCode
      */
     @Override public int hashCode() {
         return Objects.hash(pattern(), symbols(), minimumFractionDigits, decimalGroups);

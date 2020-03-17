@@ -436,7 +436,7 @@ public class BasicKeyChain implements EncryptableKeyChain {
 
     /**
      * Convenience wrapper around {@link #toEncrypted(KeyCrypter,
-     * org.bouncycastle.crypto.params.KeyParameter)} which uses the default Scrypt key derivation algorithm and
+     * KeyParameter)} which uses the default Scrypt key derivation algorithm and
      * parameters, derives a key from the given password and returns the created key.
      */
     @Override

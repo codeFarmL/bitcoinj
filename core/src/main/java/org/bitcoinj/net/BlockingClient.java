@@ -37,7 +37,7 @@ import static com.google.common.base.Preconditions.*;
  * cannot be set using NIO.</p>
  */
 public class BlockingClient implements MessageWriteTarget {
-    private static final org.slf4j.Logger log = LoggerFactory.getLogger(BlockingClient.class);
+    private static final Logger log = LoggerFactory.getLogger(BlockingClient.class);
 
     private static final int BUFFER_SIZE_LOWER_BOUND = 4096;
     private static final int BUFFER_SIZE_UPPER_BOUND = 65536;

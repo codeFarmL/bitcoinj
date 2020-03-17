@@ -120,7 +120,7 @@ public class TransactionOutPoint extends ChildMessage {
 
     /**
      * Returns the pubkey script from the connected output.
-     * @throws java.lang.NullPointerException if there is no connected output.
+     * @throws NullPointerException if there is no connected output.
      */
     public byte[] getConnectedPubKeyScript() {
         byte[] result = checkNotNull(getConnectedOutput()).getScriptBytes();

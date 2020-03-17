@@ -166,7 +166,7 @@ public class KeyCrypterScrypt implements KeyCrypter {
         } finally {
             // Zero the password bytes.
             if (passwordBytes != null) {
-                java.util.Arrays.fill(passwordBytes, (byte) 0);
+                Arrays.fill(passwordBytes, (byte) 0);
             }
         }
     }

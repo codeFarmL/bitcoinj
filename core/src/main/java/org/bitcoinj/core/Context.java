@@ -93,7 +93,7 @@ public class Context {
      * because propagation of contexts is meant to be done manually: this is so two libraries or subsystems that
      * independently use bitcoinj (or possibly alt coin forks of it) can operate correctly.
      *
-     * @throws java.lang.IllegalStateException if no context exists at all or if we are in strict mode and there is no context.
+     * @throws IllegalStateException if no context exists at all or if we are in strict mode and there is no context.
      */
     public static Context get() {
         Context tls = slot.get();

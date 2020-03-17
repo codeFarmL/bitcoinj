@@ -22,7 +22,7 @@ import java.util.Locale;
 /**
  * <p>This is just a wrapper for the i (child number) as per BIP 32 with a boolean getter for the most significant bit
  * and a getter for the actual 0-based child number. A {@link List} of these forms a <i>path</i> through a
- * {@link DeterministicHierarchy}. This class is immutable.
+ * {@link }. This class is immutable.
  */
 public class ChildNumber implements Comparable<ChildNumber> {
     /**

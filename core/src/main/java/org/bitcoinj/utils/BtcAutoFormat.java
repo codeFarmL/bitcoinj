@@ -51,8 +51,8 @@ import java.util.Locale;
  * java.text.Format} class, from which this class descends.
 
  * @see          java.text.Format
- * @see          java.text.NumberFormat
- * @see          java.text.DecimalFormat
+ * @see          NumberFormat
+ * @see          DecimalFormat
  * @see          DecimalFormatSymbols
  * @see          org.bitcoinj.core.Coin
  */

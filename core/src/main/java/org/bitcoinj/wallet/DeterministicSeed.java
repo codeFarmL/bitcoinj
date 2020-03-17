@@ -230,7 +230,7 @@ public class DeterministicSeed implements EncryptableItem {
      * Check if our mnemonic is a valid mnemonic phrase for our word list.
      * Does nothing if we are encrypted.
      *
-     * @throws org.bitcoinj.crypto.MnemonicException if check fails
+     * @throws MnemonicException if check fails
      */
     public void check() throws MnemonicException {
         if (mnemonicCode != null)

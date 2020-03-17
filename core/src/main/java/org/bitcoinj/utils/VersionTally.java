@@ -27,9 +27,9 @@ import org.bitcoinj.store.BlockStoreException;
  * is NOT thread safe (as if two threads are trying to use it concurrently,
  * there's risk of getting versions out of sequence).
  *
- * @see org.bitcoinj.core.NetworkParameters#getMajorityWindow()
- * @see org.bitcoinj.core.NetworkParameters#getMajorityEnforceBlockUpgrade()
- * @see org.bitcoinj.core.NetworkParameters#getMajorityRejectBlockOutdated()
+ * @see NetworkParameters#getMajorityWindow()
+ * @see NetworkParameters#getMajorityEnforceBlockUpgrade()
+ * @see NetworkParameters#getMajorityRejectBlockOutdated()
  */
 public class VersionTally {
     /**

@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
 
 /**
  * Provides a uniform way to access something that can be optionally encrypted with a
- * {@link KeyCrypter}, yielding an {@link EncryptedData}, and
+ * {@link KeyCrypter}, yielding an {@link }, and
  * which can have a creation time associated with it.
  */
 public interface EncryptableItem {

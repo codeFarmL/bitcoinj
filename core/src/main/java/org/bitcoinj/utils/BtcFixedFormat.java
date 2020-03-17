@@ -35,9 +35,9 @@ import java.util.List;
  *
  * <p>By default, neither currency codes nor symbols are included in formatted values as
  * output, nor recognized in parsed values as input.  The can be overridden by applying a
- * custom pattern using either the {@link BtcFormat.Builder#localizedPattern} or
- * {@link BtcFormat.Builder#localizedPattern} methods, as described in the documentation for
- * the {@link BtcFormat.Builder} class.</p>
+ * custom pattern using either the {@link Builder#localizedPattern} or
+ * {@link Builder#localizedPattern} methods, as described in the documentation for
+ * the {@link Builder} class.</p>
  *
  * <p>A more detailed explanation, including examples, is in the documentation for the
  * {@link BtcFormat} class, and further information beyond that is in the documentation for the
@@ -107,7 +107,7 @@ public final class BtcFixedFormat extends BtcFormat {
      * (by-default) parsed by this instance are denominated.  For example, if the formatter's
      * denomination is millibitcoins, then this method will return {@code "mBTC"},
      * assuming the default base currency-code is not overridden using a
-     * {@link BtcFormat.Builder}.  */
+     * {@link Builder}.  */
     public String code() { return prefixCode(coinCode(), scale); }
 
     /**
@@ -143,7 +143,7 @@ public final class BtcFixedFormat extends BtcFormat {
     }
 
     /** Return a hash code value for this instance.
-     *  @see java.lang.Object#hashCode
+     *  @see Object#hashCode
      */
     @Override public int hashCode() {
         return Objects.hash(super.hashCode(), scale);

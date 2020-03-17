@@ -183,7 +183,7 @@ public class DefaultRiskAnalysis implements RiskAnalysis {
             if (chunk.isPushData()) {
                 ECDSASignature signature;
                 try {
-                    signature = ECKey.ECDSASignature.decodeFromDER(chunk.data);
+                    signature = ECDSASignature.decodeFromDER(chunk.data);
                 } catch (SignatureDecodeException x) {
                     // Doesn't look like a signature.
                     signature = null;

@@ -136,7 +136,7 @@ public class WalletProtobufSerializer {
     }
 
     /**
-     * Change buffer size for writing wallet to output stream. Default is {@link com.google.protobuf.CodedOutputStream#DEFAULT_BUFFER_SIZE}
+     * Change buffer size for writing wallet to output stream. Default is {@link CodedOutputStream#DEFAULT_BUFFER_SIZE}
      * @param walletWriteBufferSize - buffer size in bytes
      */
     public void setWalletWriteBufferSize(int walletWriteBufferSize) {
@@ -706,7 +706,7 @@ public class WalletProtobufSerializer {
     }
 
     private WalletTransaction connectTransactionOutputs(final NetworkParameters params,
-                                                        final org.bitcoinj.wallet.Protos.Transaction txProto) throws UnreadableWalletException {
+                                                        final Protos.Transaction txProto) throws UnreadableWalletException {
         Transaction tx = txMap.get(txProto.getHash());
         final WalletTransaction.Pool pool;
         switch (txProto.getPool()) {

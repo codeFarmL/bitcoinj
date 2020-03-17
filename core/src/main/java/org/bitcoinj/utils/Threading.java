@@ -105,7 +105,7 @@ public class Threading {
                     task.run();
                 } catch (Throwable throwable) {
                     log.warn("Exception in user thread", throwable);
-                    Thread.UncaughtExceptionHandler handler = uncaughtExceptionHandler;
+                    UncaughtExceptionHandler handler = uncaughtExceptionHandler;
                     if (handler != null)
                         handler.uncaughtException(this, throwable);
                 }

@@ -41,7 +41,22 @@ public class TransactionSignature extends ECKey.ECDSASignature {
 
     /** Constructs a signature with the given components and SIGHASH_ALL. */
     public TransactionSignature(BigInteger r, BigInteger s) {
-        this(r, s, Transaction.SigHash.ALL.value);
+        this(r, s, SigHash.ALL.value);
+    }
+
+    public TransactionSignature(ECKey.ECDSASignature signature, SigHash mode, boolean anyoneCanPay, boolean useForkId) {
+        super(signature.r, signature.s);
+        sighashFlags = calcSigHashValue(mode, anyoneCanPay, useForkId);
+    }
+
+    public static int calcSigHashValue(SigHash mode, boolean anyoneCanPay, boolean useForkId) {
+        Preconditions.checkArgument(SigHash.ALL == mode || SigHash.NONE == mode || SigHash.SINGLE == mode); // enforce compatibility since this code was made before the SigHash enum was updated
+        int sighashFlags = mode.value;
+        if (anyoneCanPay)
+            sighashFlags |= SigHash.ANYONECANPAY.value;
+        if(useForkId)
+            sighashFlags |= SigHash.FORKID.value;
+        return sighashFlags;
     }
 
     /** Constructs a signature with the given components and raw sighash flag bytes (needed for rule compatibility). */
@@ -51,7 +66,7 @@ public class TransactionSignature extends ECKey.ECDSASignature {
     }
 
     /** Constructs a transaction signature based on the ECDSA signature. */
-    public TransactionSignature(ECKey.ECDSASignature signature, Transaction.SigHash mode, boolean anyoneCanPay) {
+    public TransactionSignature(ECKey.ECDSASignature signature, SigHash mode, boolean anyoneCanPay) {
         super(signature.r, signature.s);
         sighashFlags = calcSigHashValue(mode, anyoneCanPay);
     }
@@ -68,11 +83,11 @@ public class TransactionSignature extends ECKey.ECDSASignature {
     }
 
     /** Calculates the byte used in the protocol to represent the combination of mode and anyoneCanPay. */
-    public static int calcSigHashValue(Transaction.SigHash mode, boolean anyoneCanPay) {
+    public static int calcSigHashValue(SigHash mode, boolean anyoneCanPay) {
         Preconditions.checkArgument(SigHash.ALL == mode || SigHash.NONE == mode || SigHash.SINGLE == mode); // enforce compatibility since this code was made before the SigHash enum was updated
         int sighashFlags = mode.value;
         if (anyoneCanPay)
-            sighashFlags |= Transaction.SigHash.ANYONECANPAY.value;
+            sighashFlags |= SigHash.ANYONECANPAY.value;
         return sighashFlags;
     }
 
@@ -98,8 +113,8 @@ public class TransactionSignature extends ECKey.ECDSASignature {
         if (signature.length < 9 || signature.length > 73)
             return false;
 
-        int hashType = (signature[signature.length-1] & 0xff) & ~Transaction.SigHash.ANYONECANPAY.value; // mask the byte to prevent sign-extension hurting us
-        if (hashType < Transaction.SigHash.ALL.value || hashType > Transaction.SigHash.SINGLE.value)
+        int hashType = (signature[signature.length-1] & 0xff) & ~SigHash.ANYONECANPAY.value; // mask the byte to prevent sign-extension hurting us
+        if (hashType < SigHash.ALL.value || hashType > SigHash.SINGLE.value)
             return false;
 
         //                   "wrong type"                  "wrong length marker"
@@ -129,17 +144,17 @@ public class TransactionSignature extends ECKey.ECDSASignature {
     }
 
     public boolean anyoneCanPay() {
-        return (sighashFlags & Transaction.SigHash.ANYONECANPAY.value) != 0;
+        return (sighashFlags & SigHash.ANYONECANPAY.value) != 0;
     }
 
-    public Transaction.SigHash sigHashMode() {
+    public SigHash sigHashMode() {
         final int mode = sighashFlags & 0x1f;
-        if (mode == Transaction.SigHash.NONE.value)
-            return Transaction.SigHash.NONE;
-        else if (mode == Transaction.SigHash.SINGLE.value)
-            return Transaction.SigHash.SINGLE;
+        if (mode == SigHash.NONE.value)
+            return SigHash.NONE;
+        else if (mode == SigHash.SINGLE.value)
+            return SigHash.SINGLE;
         else
-            return Transaction.SigHash.ALL;
+            return SigHash.ALL;
     }
 
     /**

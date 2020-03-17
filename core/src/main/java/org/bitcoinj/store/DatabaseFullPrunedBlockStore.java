@@ -466,7 +466,7 @@ public abstract class DatabaseFullPrunedBlockStore implements FullPrunedBlockSto
      * structures are present.</p>
      *
      * @return If the tables exists.
-     * @throws java.sql.SQLException
+     * @throws SQLException
      */
     private boolean tablesExists() throws SQLException {
         PreparedStatement ps = null;
@@ -508,7 +508,7 @@ public abstract class DatabaseFullPrunedBlockStore implements FullPrunedBlockSto
 
     /**
      * Create the tables/block store in the database and
-     * @throws java.sql.SQLException If there is a database error.
+     * @throws SQLException If there is a database error.
      * @throws BlockStoreException If the block store could not be created.
      */
     private void createTables() throws SQLException, BlockStoreException {
@@ -568,7 +568,7 @@ public abstract class DatabaseFullPrunedBlockStore implements FullPrunedBlockSto
 
     /**
      * Initialise the store state from the database.
-     * @throws java.sql.SQLException If there is a database error.
+     * @throws SQLException If there is a database error.
      * @throws BlockStoreException If there is a block store error.
      */
     private void initFromDatabase() throws SQLException, BlockStoreException {

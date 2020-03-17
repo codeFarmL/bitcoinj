@@ -1346,7 +1346,7 @@ public class DeterministicKeyChain implements EncryptableKeyChain {
     /**
      * Whether the keychain is married.  A keychain is married when it vends P2SH addresses
      * from multiple keychains in a multisig relationship.
-     * @see org.bitcoinj.wallet.MarriedKeyChain
+     * @see MarriedKeyChain
      */
     public boolean isMarried() {
         return false;

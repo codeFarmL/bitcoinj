@@ -351,7 +351,7 @@ public class TransactionInput extends ChildMessage {
     public ConnectionResult connect(Map<Sha256Hash, Transaction> transactions, ConnectMode mode) {
         Transaction tx = transactions.get(outpoint.getHash());
         if (tx == null) {
-            return TransactionInput.ConnectionResult.NO_SUCH_TX;
+            return ConnectionResult.NO_SUCH_TX;
         }
         return connect(tx, mode);
     }
@@ -378,11 +378,11 @@ public class TransactionInput extends ChildMessage {
                 out.markAsUnspent();
             } else if (mode == ConnectMode.ABORT_ON_CONFLICT) {
                 outpoint.fromTx = out.getParentTransaction();
-                return TransactionInput.ConnectionResult.ALREADY_SPENT;
+                return ConnectionResult.ALREADY_SPENT;
             }
         }
         connect(out);
-        return TransactionInput.ConnectionResult.SUCCESS;
+        return ConnectionResult.SUCCESS;
     }
 
     /** Internal use only: connects this TransactionInput to the given output (updates pointers and spent flags) */

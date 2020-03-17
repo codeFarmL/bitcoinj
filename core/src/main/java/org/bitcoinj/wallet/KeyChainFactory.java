@@ -38,7 +38,7 @@ public interface KeyChainFactory {
      * @param accountPath account path to generate receiving addresses on
      */
     DeterministicKeyChain makeKeyChain(DeterministicSeed seed, KeyCrypter crypter, boolean isMarried,
-            Script.ScriptType outputScriptType, List<ChildNumber> accountPath);
+                                       Script.ScriptType outputScriptType, List<ChildNumber> accountPath);
 
     /**
      * Make a watching keychain.
@@ -51,7 +51,7 @@ public interface KeyChainFactory {
      * @param outputScriptType type of addresses (aka output scripts) to generate for watching
      */
     DeterministicKeyChain makeWatchingKeyChain(DeterministicKey accountKey, boolean isFollowingKey, boolean isMarried,
-            Script.ScriptType outputScriptType) throws UnreadableWalletException;
+                                               Script.ScriptType outputScriptType) throws UnreadableWalletException;
 
     /**
      * Make a spending keychain.
@@ -63,5 +63,5 @@ public interface KeyChainFactory {
      * @param outputScriptType type of addresses (aka output scripts) to generate for spending
      */
     DeterministicKeyChain makeSpendingKeyChain(DeterministicKey accountKey, boolean isMarried,
-            Script.ScriptType outputScriptType) throws UnreadableWalletException;
+                                               Script.ScriptType outputScriptType) throws UnreadableWalletException;
 }

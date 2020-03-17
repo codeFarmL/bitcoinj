@@ -244,7 +244,6 @@ public class DeterministicKey extends ECKey {
 
     /**
      * Returns private key bytes, padded with zeros to 33 bytes.
-     * @throws java.lang.IllegalStateException if the private key bytes are missing.
      */
     public byte[] getPrivKeyBytes33() {
         byte[] bytes33 = new byte[33];
@@ -461,7 +460,6 @@ public class DeterministicKey extends ECKey {
     /**
      * Returns the private key of this deterministic key. Even if this object isn't storing the private key,
      * it can be re-derived by walking up to the parents if necessary and this is what will happen.
-     * @throws java.lang.IllegalStateException if the parents are encrypted or a watching chain.
      */
     @Override
     public BigInteger getPrivKey() {
@@ -525,7 +523,6 @@ public class DeterministicKey extends ECKey {
     /**
       * Deserialize a base-58-encoded HD Key.
       *  @param parent The parent node in the given key's deterministic hierarchy.
-      *  @throws IllegalArgumentException if the base58 encoded key could not be parsed.
       */
     public static DeterministicKey deserializeB58(@Nullable DeterministicKey parent, String base58, NetworkParameters params) {
         return deserialize(params, Base58.decodeChecked(base58), parent);

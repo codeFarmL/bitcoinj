@@ -106,8 +106,8 @@ public class PaymentProtocol {
      * Parse a payment request.
      * 
      * @param paymentRequest payment request to parse
-     * @return instance of {@link PaymentSession}, used as a value object
-     * @throws PaymentProtocolException
+     * @return instance of {@link }, used as a value object
+     * @throws
      */
     public static PaymentSession parsePaymentRequest(Protos.PaymentRequest paymentRequest)
             throws PaymentProtocolException {
